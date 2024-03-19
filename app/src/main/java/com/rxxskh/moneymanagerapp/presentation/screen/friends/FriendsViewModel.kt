@@ -5,12 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rxxskh.utils.Resource
-import com.rxxskh.domain.user.model.User
 import com.rxxskh.domain.friend.usecase.AddFriendUseCase
 import com.rxxskh.domain.friend.usecase.DeleteFriendUseCase
 import com.rxxskh.domain.friend.usecase.GetFriendsUseCase
-import com.rxxskh.moneymanagerapp.common.TestValues
+import com.rxxskh.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -23,8 +21,6 @@ class FriendsViewModel @Inject constructor(
     private val deleteFriendUseCase: DeleteFriendUseCase
 ) : ViewModel() {
 
-    var authorizedUser by mutableStateOf<User?>(null)
-        private set
     var friendNames by mutableStateOf<List<String>>(emptyList())
         private set
 
@@ -41,10 +37,16 @@ class FriendsViewModel @Inject constructor(
     }
 
     fun updateNewFriendLogin(input: String) {
+        if (addFriendErrorMessage.isNotEmpty()) {
+            addFriendErrorMessage = ""
+        }
         newFriendLogin = input.trim()
     }
 
     fun clearNewFriendLogin() {
+        if (addFriendErrorMessage.isNotEmpty()) {
+            addFriendErrorMessage = ""
+        }
         newFriendLogin = ""
     }
 
@@ -81,11 +83,9 @@ class FriendsViewModel @Inject constructor(
         ).onEach {}.launchIn(viewModelScope)
     }
 
-    private fun isCorrectNewFriend(): Boolean =
-        authorizedUser!!.userLogin != newFriendLogin && friendNames.indexOf(newFriendLogin) == -1
+    private fun isCorrectNewFriend(): Boolean = friendNames.indexOf(newFriendLogin) == -1
 
     private fun loadData() {
-        authorizedUser = TestValues.authUser
         loadFriend()
     }
 

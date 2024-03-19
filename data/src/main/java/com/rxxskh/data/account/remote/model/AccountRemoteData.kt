@@ -1,6 +1,6 @@
 package com.rxxskh.data.account.remote.model
 
-import com.rxxskh.data.user.remote.model.UserData
+import com.rxxskh.data.user.remote.model.UserRemoteData
 import com.rxxskh.data.user.remote.model.toUser
 import com.rxxskh.domain.account.model.Account
 
@@ -16,7 +16,7 @@ fun Account.toAccountRemoteData(): AccountRemoteData = AccountRemoteData(
     account_balance = accountBalance
 )
 
-fun Pair<AccountRemoteData, List<UserData>>.toAccount() = Account(
+fun Pair<AccountRemoteData, List<UserRemoteData>>.toAccount() = Account(
     accountId = this.first.account_id ?: "",
     accountName = this.first.account_name ?: "",
     accountBalance = this.first.account_balance ?: 0,

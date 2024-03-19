@@ -23,7 +23,7 @@ class TransactionRepositoryImpl @Inject constructor(
     override suspend fun loadData() {
         transactionLocalDataSource.save(
             transactionList = transactionRemoteDataSource.getTransactions(
-                userId = userLocalDataSource.get().user_id!!
+                userId = userLocalDataSource.getUser()!!.userId!!
             ).map {
                 it.toTransaction(
                     account = accountLocalDataSource.getById(accountId = it.account_id!!),
@@ -40,7 +40,7 @@ class TransactionRepositoryImpl @Inject constructor(
     override suspend fun addTransaction(transaction: Transaction) {
         val newTransaction = transaction
             .copy(transactionId = transactionRemoteDataSource.pushTransactionKey())
-            .copy(userId = userLocalDataSource.get().user_id!!)
+            .copy(userId = userLocalDataSource.getUser()!!.userId!!)
 
         transactionLocalDataSource.push(transaction = newTransaction)
         accountLocalDataSource.edit(editedAccount = transaction.account)

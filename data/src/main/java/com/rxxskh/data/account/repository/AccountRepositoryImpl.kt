@@ -5,7 +5,7 @@ import com.rxxskh.data.account.remote.AccountRemoteDataSource
 import com.rxxskh.data.account.remote.model.toAccount
 import com.rxxskh.data.account.remote.model.toAccountRemoteData
 import com.rxxskh.data.user.local.UserLocalDataSource
-import com.rxxskh.data.user.remote.model.toUserData
+import com.rxxskh.data.user.remote.model.toUserRemoteData
 import com.rxxskh.domain.account.model.Account
 import com.rxxskh.domain.account.repository.AccountRepository
 import com.rxxskh.domain.user.model.User
@@ -20,16 +20,22 @@ class AccountRepositoryImpl @Inject constructor(
     override suspend fun loadData() {
         accountLocalDataSource.save(
             accountList = accountRemoteDataSource.getAccounts(
-                userId = userLocalDataSource.get().user_id!!
+                userId = userLocalDataSource.getUser()!!.userId!!
             ).map { it.toAccount() }
         )
     }
 
-    override suspend fun applyAccount(account: Account, newAccountMembers: List<User>) {
+    override suspend fun applyAccount(
+        account: Account,
+        newAccountMembers: List<User>,
+        oldAccountMembers: List<User>
+    ) {
         accountRemoteDataSource.applyAccount(
-            userId = userLocalDataSource.get().user_id!!,
+            userId = userLocalDataSource.getUser()!!.userId!!,
             accountRemoteData = account.toAccountRemoteData(),
-            newAccountMembers = newAccountMembers.map { it.toUserData() })
+            newAccountMembers = newAccountMembers.map { it.toUserRemoteData() },
+            oldAccountMembers = oldAccountMembers.map { it.toUserRemoteData() }
+        )
         loadData()
     }
 

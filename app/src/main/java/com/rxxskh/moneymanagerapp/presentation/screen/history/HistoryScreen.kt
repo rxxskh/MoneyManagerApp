@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rxxskh.domain.transaction.model.Transaction
-import com.rxxskh.domain.transaction.model.TransactionType
+import com.rxxskh.domain.transaction.model.OperationType
 import com.rxxskh.moneymanagerapp.R
 import com.rxxskh.moneymanagerapp.common.Constants
 import com.rxxskh.moneymanagerapp.common.toRussianCurrency
@@ -87,8 +87,8 @@ fun HistoryScreen(
                 leftButtonIconId = R.drawable.ic_arrow_back,
                 onLeftButtonClick = {
                     when (vm.passedHistoryType) {
-                        TransactionType.INCOME -> navController.navigate(Screen.IncomeScreen.route)
-                        TransactionType.EXPENSE -> navController.navigate(Screen.ExpenseScreen.route)
+                        OperationType.INCOME -> navController.navigate(Screen.IncomeScreen.route)
+                        OperationType.EXPENSE -> navController.navigate(Screen.ExpenseScreen.route)
                         else -> {}
                     }
                 }
@@ -112,7 +112,7 @@ fun HistoryScreen(
                             .padding(horizontal = 16.dp)
                             .padding(bottom = if (vm.showTransactions.indexOf(transaction) == vm.showTransactions.lastIndex) 0.dp else 16.dp),
                         transaction = transaction,
-                        transactionType = vm.passedHistoryType,
+                        operationType = vm.passedHistoryType,
                         onDeleteClick = { vm.deleteTransaction(it) }
                     )
                 }
@@ -170,7 +170,7 @@ fun HistoryOptions(
 fun TransactionItem(
     modifier: Modifier = Modifier,
     transaction: Transaction,
-    transactionType: TransactionType,
+    operationType: OperationType,
     onDeleteClick: (Transaction) -> Unit
 ) {
     Card(
@@ -221,20 +221,20 @@ fun TransactionItem(
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = when (transactionType) {
-                            TransactionType.INCOME -> transaction.value
-                            TransactionType.EXPENSE -> -transaction.value
+                        text = when (operationType) {
+                            OperationType.INCOME -> transaction.transactionValue
+                            OperationType.EXPENSE -> -transaction.transactionValue
                             else -> 0
                         }.toRussianCurrency(),
-                        color = when (transactionType) {
-                            TransactionType.INCOME -> LightGreen
-                            TransactionType.EXPENSE -> LightRed
+                        color = when (operationType) {
+                            OperationType.INCOME -> LightGreen
+                            OperationType.EXPENSE -> LightRed
                             else -> Color.White
                         },
                         style = MaterialTheme.typography.title2
                     )
                     Text(
-                        text = transaction.date.toRussianDate(),
+                        text = transaction.transactionDate.toRussianDate(),
                         color = LightGray,
                         style = MaterialTheme.typography.base2
                     )

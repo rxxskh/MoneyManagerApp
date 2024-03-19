@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.rxxskh.domain.transaction.model.OperationType
 import com.rxxskh.moneymanagerapp.R
 import com.rxxskh.moneymanagerapp.presentation.component.AppTopBar
 import com.rxxskh.moneymanagerapp.presentation.component.CategoryItem
@@ -24,8 +25,10 @@ import com.rxxskh.moneymanagerapp.presentation.ui.theme.Background
 fun CategoriesScreen(
     vm: CategoriesViewModel = hiltViewModel(),
     navController: NavController,
+    categoryType: String,
     accountId: String
 ) {
+    vm.passCategoryType(categoryType)
     vm.passAccountId(accountId)
 
     Column(
@@ -36,11 +39,12 @@ fun CategoriesScreen(
         AppTopBar(
             text = stringResource(id = R.string.categories_title),
             leftButtonIconId = R.drawable.ic_arrow_back,
-            onLeftButtonClick = { navController.navigate(Screen.IncomeScreen.route) },
+            onLeftButtonClick = { navController.navigate(if (vm.passedCategoryType == OperationType.INCOME) Screen.IncomeScreen.route else Screen.ExpenseScreen.route) },
             rightButtonIconId = R.drawable.ic_plus,
             onRightButtonClick = {
                 navController.navigate(
                     Screen.CategoryEditScreen.passIds(
+                        categoryType = vm.passedCategoryType!!.name,
                         accountId = accountId,
                         categoryId = null
                     )
@@ -58,6 +62,7 @@ fun CategoriesScreen(
                     onCategoryClick = {
                         navController.navigate(
                             Screen.CategoryEditScreen.passIds(
+                                categoryType = vm.passedCategoryType!!.name,
                                 accountId = accountId,
                                 categoryId = it.categoryId
                             )

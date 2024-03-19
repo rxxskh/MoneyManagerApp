@@ -64,6 +64,7 @@ fun SignupScreen(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 value = vm.login,
                 onValueChange = { vm.updateLogin(it) },
+                onClearClick = { vm.clearLogin() },
                 placeHolder = stringResource(id = R.string.login_placeholder),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -74,6 +75,7 @@ fun SignupScreen(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 value = vm.password,
                 onValueChange = { vm.updatePassword(it) },
+                onClearClick = { vm.clearPassword() },
                 placeHolder = stringResource(id = R.string.password_placeholder),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -100,7 +102,7 @@ fun SignupScreen(
                 AppLargeButton(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     enabled = vm.isButtonEnabled(),
-                    onClick = { vm.registerUser() },
+                    onClick = { vm.registerUser(onComplete = { navController.navigate(Screen.LoginScreen.route) }) },
                     gradient = BlueGradient,
                     text = stringResource(id = if (vm.isSignupWaiting()) R.string.signup_waiting else R.string.signup_button)
                 )
@@ -128,8 +130,4 @@ fun SignupScreen(
             }
         }
     }
-
-//    if (vm.status == true) {
-//        navController.navigate(Screen.LoginScreen.route)
-//    }
 }

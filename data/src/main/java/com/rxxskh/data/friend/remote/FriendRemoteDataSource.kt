@@ -3,7 +3,7 @@ package com.rxxskh.data.friend.remote
 import com.rxxskh.utils.FirebaseReferencesProvider
 import com.rxxskh.utils.FriendNotFoundException
 import com.rxxskh.data.friend.remote.model.UserFriendData
-import com.rxxskh.data.user.remote.model.UserData
+import com.rxxskh.data.user.remote.model.UserRemoteData
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -12,7 +12,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class FriendRemoteDataSource @Inject constructor() {
 
-    suspend fun getFriends(userId: String): List<UserData> {
+    suspend fun getFriends(userId: String): List<UserRemoteData> {
         val friendIds = suspendCoroutine { continuation ->
             val result = mutableListOf<String>()
             FirebaseReferencesProvider.USER_FRIENDS_REF.get()
@@ -37,7 +37,7 @@ class FriendRemoteDataSource @Inject constructor() {
         return friendIds.mapNotNull { getUserById(it) }
     }
 
-    suspend fun addFriend(userId: String, friendName: String): UserData? {
+    suspend fun addFriend(userId: String, friendName: String): UserRemoteData? {
         val friendId = getFriendIdByName(friendName = friendName)
         val friendData = getUserById(userId = friendId)
         if (friendId.isNotEmpty()) {
@@ -62,7 +62,7 @@ class FriendRemoteDataSource @Inject constructor() {
         return friendData
     }
 
-    suspend fun deleteFriend(userId: String, friendName: String): UserData? {
+    suspend fun deleteFriend(userId: String, friendName: String): UserRemoteData? {
         val friendId = getFriendIdByName(friendName = friendName)
         val friendData = getUserById(userId = friendId)
         val deleteKeys =
@@ -98,7 +98,7 @@ class FriendRemoteDataSource @Inject constructor() {
                 .addOnSuccessListener { snapshot ->
                     if (snapshot.exists()) {
                         for (children in snapshot.children) {
-                            val data = children.getValue(UserData::class.java)
+                            val data = children.getValue(UserRemoteData::class.java)
                             if (data != null) {
                                 if (data.user_login == friendName) {
                                     result = data.user_id ?: ""
@@ -112,11 +112,11 @@ class FriendRemoteDataSource @Inject constructor() {
                 }
         }
 
-    private suspend fun getUserById(userId: String): UserData? =
+    private suspend fun getUserById(userId: String): UserRemoteData? =
         suspendCoroutine { continuation ->
             FirebaseReferencesProvider.USERS_REF.child(userId).get()
                 .addOnSuccessListener { snapshot ->
-                    continuation.resume(snapshot.getValue(UserData::class.java))
+                    continuation.resume(snapshot.getValue(UserRemoteData::class.java))
                 }.addOnFailureListener { exception ->
                     continuation.resumeWithException(exception)
                 }

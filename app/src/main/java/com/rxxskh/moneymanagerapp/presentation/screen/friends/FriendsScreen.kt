@@ -110,17 +110,19 @@ fun FriendsAddPanel(
                 imeAction = ImeAction.Done
             )
         )
-        Text(
-            text = errorMessage,
-            modifier = Modifier
-                .padding(vertical = 8.dp, horizontal = 16.dp)
-                .fillMaxWidth(),
-            color = if (errorMessage.isEmpty()) Background else DarkRed,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.base2
-        )
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                modifier = Modifier
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                    .fillMaxWidth(),
+                color = DarkRed,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.base2
+            )
+        }
         AppLargeButton(
             modifier = Modifier.padding(top = 16.dp),
             enabled = value.isNotEmpty() && addButtonActive,

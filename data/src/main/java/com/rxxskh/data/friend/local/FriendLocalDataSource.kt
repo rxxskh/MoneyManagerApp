@@ -3,11 +3,11 @@ package com.rxxskh.data.friend.local
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.rxxskh.utils.SharedPreferenceProvider
-import com.rxxskh.data.user.remote.model.UserData
+import com.rxxskh.data.user.remote.model.UserRemoteData
 import javax.inject.Inject
 
 data class ListFriends(
-    val list: List<UserData>
+    val list: List<UserRemoteData>
 )
 
 class FriendLocalDataSource @Inject constructor(
@@ -15,7 +15,7 @@ class FriendLocalDataSource @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) {
 
-    suspend fun save(friends: List<UserData>) {
+    suspend fun save(friends: List<UserRemoteData>) {
         val listFriends = ListFriends(list = friends)
         with(sharedPreferences.edit()) {
             val json: String = gson.toJson(listFriends)
@@ -24,7 +24,7 @@ class FriendLocalDataSource @Inject constructor(
         }
     }
 
-    suspend fun get(): List<UserData> {
+    suspend fun get(): List<UserRemoteData> {
         val json: String? = sharedPreferences.getString(SharedPreferenceProvider.FRIENDS_DATA_PREFS_KEY, null)
         return if (json != null) {
             gson.fromJson(json, ListFriends::class.java).list

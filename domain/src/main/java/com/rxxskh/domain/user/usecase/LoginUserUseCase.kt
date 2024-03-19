@@ -1,8 +1,8 @@
 package com.rxxskh.domain.user.usecase
 
-import com.rxxskh.utils.Resource
 import com.rxxskh.domain.user.model.User
 import com.rxxskh.domain.user.repository.UserRepository
+import com.rxxskh.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -21,7 +21,7 @@ class LoginUserUseCase @Inject constructor(
         } catch (e: IOException) {
             emit(Resource.Error(message = "Ошибка подключения сети"))
         } catch (e: Exception) {
-            emit(Resource.Error(message = e.message ?: "Неизвестная ошибка"))
+            emit(Resource.Error(message = "Неизвестная ошибка"))
         }
     }.flowOn(Dispatchers.IO)
 }

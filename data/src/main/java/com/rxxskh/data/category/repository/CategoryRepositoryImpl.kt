@@ -23,7 +23,7 @@ class CategoryRepositoryImpl @Inject constructor(
     override suspend fun loadData() {
         val categoryMemberList = categoryRemoteDataSource.getCategoryMemberList(
             accountIdList = accountLocalDataSource.get().map { it.accountId },
-            userId = userLocalDataSource.get().user_id!!
+            userId = userLocalDataSource.getUser()!!.userId!!
         )
         val categories = categoryRemoteDataSource.getCategories(
             categoryIdList = categoryMemberList.map { it.category_id!! }
@@ -62,7 +62,7 @@ class CategoryRepositoryImpl @Inject constructor(
         if (category.categoryId == null) {
             categoryRemoteDataSource.pushCategoryMember(
                 categoryId = categoryId!!,
-                userId = if (accountId == null) userLocalDataSource.get().user_id!! else null,
+                userId = if (accountId == null) userLocalDataSource.getUser()!!.userId!! else null,
                 accountId = accountId
             )
         }

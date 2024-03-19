@@ -1,11 +1,12 @@
 package com.rxxskh.data.user.remote
 
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.rxxskh.data.user.remote.model.UserRemoteData
 import com.rxxskh.utils.FirebaseReferencesProvider
 import com.rxxskh.utils.NameTakenException
-import com.rxxskh.data.user.remote.model.UserData
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -13,33 +14,33 @@ import kotlin.coroutines.suspendCoroutine
 
 class UserRemoteDataSource @Inject constructor() {
 
-    suspend fun saveUser(userData: UserData): Boolean {
-        if (isNameTaken(userLogin = userData.user_login ?: "").not()) {
+    suspend fun saveUser(userRemoteData: UserRemoteData): Boolean {
+        if (isNameTaken(userLogin = userRemoteData.user_login ?: "").not()) {
             val id = FirebaseReferencesProvider.USERS_REF.push().key!!
-            FirebaseReferencesProvider.USERS_REF.child(id).setValue(userData.copy(user_id = id))
+            FirebaseReferencesProvider.USERS_REF.child(id).setValue(userRemoteData.copy(user_id = id))
             return true
         }
         throw NameTakenException()
     }
 
-    suspend fun checkUser(userData: UserData): UserData {
+    suspend fun checkUser(userRemoteData: UserRemoteData): String? {
         val dbRef = FirebaseReferencesProvider.USERS_REF
-        val dbOrdered = dbRef.orderByChild("userLogin").equalTo(userData.user_login)
+        val dbOrdered = dbRef.orderByChild("user_login").equalTo(userRemoteData.user_login)
         return suspendCoroutine { continuation ->
             dbOrdered.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         for (snap in snapshot.children) {
-                            val data = snap.getValue(UserData::class.java)
+                            val data = snap.getValue(UserRemoteData::class.java)
                             if (data != null) {
-                                if (userData.user_password == data.user_password) {
-                                    continuation.resume(data)
+                                if (userRemoteData.user_password == data.user_password) {
+                                    continuation.resume(data.user_id!!)
                                     break
                                 }
                             }
                         }
                     } else {
-                        continuation.resume(UserData())
+                        continuation.resume(null)
                     }
                 }
 

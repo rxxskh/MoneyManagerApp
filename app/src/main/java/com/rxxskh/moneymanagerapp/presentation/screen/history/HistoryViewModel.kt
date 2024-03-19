@@ -1,6 +1,5 @@
 package com.rxxskh.moneymanagerapp.presentation.screen.history
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.rxxskh.domain.account.model.Account
 import com.rxxskh.domain.account.usecase.GetAccountsUseCase
 import com.rxxskh.domain.transaction.model.Transaction
-import com.rxxskh.domain.transaction.model.TransactionType
+import com.rxxskh.domain.transaction.model.OperationType
 import com.rxxskh.domain.transaction.usecase.DeleteTransactionUseCase
 import com.rxxskh.domain.transaction.usecase.GetTransactionsUseCase
 import com.rxxskh.moneymanagerapp.presentation.screen.history.components.Month
@@ -26,7 +25,7 @@ class HistoryViewModel @Inject constructor(
     private val getAccountsUseCase: GetAccountsUseCase
 ) : ViewModel() {
 
-    var passedHistoryType by mutableStateOf<TransactionType>(TransactionType.NONE)
+    var passedHistoryType by mutableStateOf<OperationType>(OperationType.NONE)
     private var historyTypePassedStatus by mutableStateOf<Boolean>(false)
 
     var showTransactions by mutableStateOf<List<Transaction>>(emptyList())
@@ -54,12 +53,11 @@ class HistoryViewModel @Inject constructor(
     }
 
     fun passHistoryType(input: String) {
-        Log.e("AAA", input)
         if (!historyTypePassedStatus) {
             passedHistoryType = when (input) {
-                TransactionType.INCOME.name -> TransactionType.INCOME
-                TransactionType.EXPENSE.name -> TransactionType.EXPENSE
-                else -> TransactionType.NONE
+                OperationType.INCOME.name -> OperationType.INCOME
+                OperationType.EXPENSE.name -> OperationType.EXPENSE
+                else -> OperationType.NONE
             }
             historyTypePassedStatus = true
         }
@@ -135,10 +133,10 @@ class HistoryViewModel @Inject constructor(
                     .contains(it.account.accountId)
             }
             .filter {
-                selectedMonths.contains(Month(it.date.month, it.date.year))
+                selectedMonths.contains(Month(it.transactionDate.month, it.transactionDate.year))
             }
             .filter {
-                it.type == passedHistoryType
+                it.operationType == passedHistoryType
             }
     }
 
@@ -164,7 +162,7 @@ class HistoryViewModel @Inject constructor(
                 }.launchIn(viewModelScope)
                     .invokeOnCompletion {
                         months =
-                            transactions.map { Month(month = it.date.month, year = it.date.year) }
+                            transactions.map { Month(month = it.transactionDate.month, year = it.transactionDate.year) }
                                 .distinct()
                         if (months.isNotEmpty()) {
                             selectedMonths = listOf(months[0])

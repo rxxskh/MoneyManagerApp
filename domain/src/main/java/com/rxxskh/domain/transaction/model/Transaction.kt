@@ -9,7 +9,7 @@ data class Transaction(
     val userId: String? = null,
     val account: Account,
     val category: Category,
-    val value: Long,
-    val type: TransactionType,
-    val date: Date,
+    val transactionValue: Long,
+    val operationType: OperationType,
+    val transactionDate: Date,
 )

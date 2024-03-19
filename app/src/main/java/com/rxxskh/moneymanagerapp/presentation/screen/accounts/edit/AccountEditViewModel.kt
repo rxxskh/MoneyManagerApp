@@ -1,17 +1,19 @@
 package com.rxxskh.moneymanagerapp.presentation.screen.accounts.edit
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rxxskh.utils.Resource
 import com.rxxskh.domain.account.model.Account
 import com.rxxskh.domain.account.usecase.ApplyAccountUseCase
 import com.rxxskh.domain.account.usecase.GetAccountByIdUseCase
 import com.rxxskh.domain.friend.usecase.GetFriendsUseCase
 import com.rxxskh.domain.user.model.User
 import com.rxxskh.domain.user.usecase.GetUserUseCase
+import com.rxxskh.moneymanagerapp.common.Constants
+import com.rxxskh.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -58,7 +60,7 @@ class AccountEditViewModel @Inject constructor(
     fun passAccountId(input: String) {
         if (passedAccountId == null) {
             passedAccountId = input
-            if (passedAccountId == "new") loadData() else loadAccount()
+            if (passedAccountId == Constants.NEW_TAG) loadData() else loadAccount()
         }
     }
 
@@ -83,7 +85,8 @@ class AccountEditViewModel @Inject constructor(
         addingStatus = true
         applyAccountUseCase(
             account = makeAccount(),
-            newAccountMembers = getNewAccountMembers()
+            newAccountMembers = getNewAccountMembers(),
+            oldAccountMembers = getOldAccountMembers()
         ).onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -111,11 +114,18 @@ class AccountEditViewModel @Inject constructor(
             accountBalance = balance.toLong(),
         )
 
-    private fun getNewAccountMembers(): List<User> =
-        friends.filter { it.second }.filter {
-            if (passedAccount != null) passedAccount!!.accountMembers.contains(it.first)
-                .not() else true
+    private fun getNewAccountMembers(): List<User> {
+        return friends.filter { it.second }.filter {
+            if (passedAccount != null) !passedAccount!!.accountMembers.contains(it.first) else true
         }.map { it.first }
+    }
+
+    private fun getOldAccountMembers(): List<User> {
+        val result = friends.filter { !it.second }.filter {
+            if (passedAccount != null) passedAccount!!.accountMembers.contains(it.first) else true
+        }.map { it.first }
+        return result
+    }
 
     private fun loadAccount() {
         getAccountByIdUseCase(accountId = passedAccountId!!).onEach { result ->

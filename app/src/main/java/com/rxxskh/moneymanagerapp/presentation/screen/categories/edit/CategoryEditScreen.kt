@@ -42,10 +42,12 @@ import com.rxxskh.moneymanagerapp.presentation.ui.theme.base2
 fun CategoryEditScreen(
     vm: CategoryEditViewModel = hiltViewModel(),
     navController: NavController,
+    categoryType: String,
     accountId: String,
     categoryId: String
 ) {
     vm.passData(
+        categoryType = categoryType,
         accountId = accountId,
         categoryId = categoryId
     )
@@ -78,7 +80,8 @@ fun CategoryEditScreen(
                 leftButtonIconId = R.drawable.ic_arrow_back,
                 onLeftButtonClick = {
                     navController.navigate(
-                        Screen.CategoriesScreen.passAccountId(
+                        Screen.CategoriesScreen.passIds(
+                            categoryType = vm.passedCategoryType!!.name,
                             accountId = accountId
                         )
                     )
@@ -87,7 +90,8 @@ fun CategoryEditScreen(
                 onRightButtonClick = {
                     vm.applyCategory(onComplete = {
                         navController.navigate(
-                            Screen.CategoriesScreen.passAccountId(
+                            Screen.CategoriesScreen.passIds(
+                                categoryType = vm.passedCategoryType!!.name,
                                 accountId = accountId
                             )
                         )
@@ -128,7 +132,8 @@ fun CategoryEditScreen(
                                 onClick = {
                                     vm.deleteCategory(onComplete = {
                                         navController.navigate(
-                                            Screen.CategoriesScreen.passAccountId(
+                                            Screen.CategoriesScreen.passIds(
+                                                categoryType = vm.passedCategoryType!!.name,
                                                 accountId = accountId
                                             )
                                         )

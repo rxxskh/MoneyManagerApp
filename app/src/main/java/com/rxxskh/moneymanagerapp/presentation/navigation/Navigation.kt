@@ -38,6 +38,7 @@ import com.rxxskh.moneymanagerapp.presentation.screen.expense.ExpenseScreen
 import com.rxxskh.moneymanagerapp.presentation.screen.friends.FriendsScreen
 import com.rxxskh.moneymanagerapp.presentation.screen.history.HistoryScreen
 import com.rxxskh.moneymanagerapp.presentation.screen.income.IncomeScreen
+import com.rxxskh.moneymanagerapp.presentation.screen.profile.ProfileScreen
 import com.rxxskh.moneymanagerapp.presentation.screen.splash.SplashScreen
 import com.rxxskh.moneymanagerapp.presentation.ui.theme.Background
 import com.rxxskh.moneymanagerapp.presentation.ui.theme.DarkBlue
@@ -51,7 +52,7 @@ import com.rxxskh.moneymanagerapp.presentation.ui.theme.base2
 fun NavigationGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route
+        startDestination = Screen.LoginScreen.route
     ) {
         composable(
             route = Screen.SplashScreen.route
@@ -84,41 +85,39 @@ fun NavigationGraph(navController: NavHostController) {
             AccountsScreen(navController = navController)
         }
         composable(
-            route = Screen.AccountEditScreen.route,
-            arguments = listOf(navArgument("id") {
-                type = NavType.StringType
-            })
-        ) {
-            AccountEditScreen(
-                navController = navController,
-                accountId = it.arguments?.getString("id")!!
-            )
-        }
-        composable(
             route = Screen.FriendsScreen.route
         ) {
             FriendsScreen()
         }
         composable(
+            route = Screen.ProfileScreen.route
+        ) {
+            ProfileScreen(navController = navController)
+        }
+        composable(
             route = Screen.CategoriesScreen.route,
-            arguments = listOf(navArgument("accountId") {
-                type = NavType.StringType
-            })
+            arguments = listOf(
+                navArgument("categoryType") { type = NavType.StringType },
+                navArgument("accountId") { type = NavType.StringType }
+            )
         ) {
             CategoriesScreen(
                 navController = navController,
+                categoryType = it.arguments?.getString("categoryType")!!,
                 accountId = it.arguments?.getString("accountId")!!
             )
         }
         composable(
             route = Screen.CategoryEditScreen.route,
             arguments = listOf(
+                navArgument("categoryType") { type = NavType.StringType },
                 navArgument("accountId") { type = NavType.StringType },
                 navArgument("categoryId") { type = NavType.StringType },
             )
         ) {
             CategoryEditScreen(
                 navController = navController,
+                categoryType = it.arguments?.getString("categoryType")!!,
                 accountId = it.arguments?.getString("accountId")!!,
                 categoryId = it.arguments?.getString("categoryId")!!
             )
@@ -134,6 +133,17 @@ fun NavigationGraph(navController: NavHostController) {
                 historyType = it.arguments?.getString("historyType")!!
             )
         }
+        composable(
+            route = Screen.AccountEditScreen.route,
+            arguments = listOf(navArgument("id") {
+                type = NavType.StringType
+            })
+        ) {
+            AccountEditScreen(
+                navController = navController,
+                accountId = it.arguments?.getString("id")!!
+            )
+        }
     }
 }
 
@@ -145,7 +155,8 @@ fun BottomNavigationBar(
         Screen.IncomeScreen,
         Screen.ExpenseScreen,
         Screen.AccountsScreen,
-        Screen.FriendsScreen
+        Screen.FriendsScreen,
+        Screen.ProfileScreen
     )
     val backStackEntry = navController.currentBackStackEntryAsState()
     Box(
@@ -215,56 +226,3 @@ fun BottomNavigationBar(
         }
     }
 }
-
-//@Composable
-//fun BottomNavigationBar(
-//    navController: NavController,
-//) {
-//    val screens = listOf(
-//        Screen.IncomeScreen,
-//        Screen.ExpenseScreen,
-//        Screen.AccountsScreen,
-//        Screen.FriendsScreen
-//    )
-//    val backStackEntry = navController.currentBackStackEntryAsState()
-//    NavigationBar(
-//        containerColor = SecondBackground,
-//        contentColor = Background,
-//    ) {
-//        screens.forEach { screen ->
-//            val selected = screen.route == backStackEntry.value?.destination?.route
-//            val color = when (screen.route) {
-//                Screen.IncomeScreen.route -> LightGreen
-//                Screen.ExpenseScreen.route -> LightRed
-//                Screen.AccountsScreen.route -> LightBlue
-//                Screen.FriendsScreen.route -> LightBlue
-//                else -> LightGray
-//            }
-//            NavigationBarItem(
-//                label = {
-//                    Text(
-//                        text = screen.label!!,
-//                        color = if (selected) color else DarkGray
-//                    )
-//                },
-//                selected = selected,
-//                onClick = {
-//                    navController.navigate(screen.route) {
-//                        popUpTo(0)
-//                    }
-//                },
-//                colors = NavigationBarItemDefaults.colors(
-//                    indicatorColor = SecondBackground
-//                ),
-//                icon = {
-//                    Icon(
-//                        painter = painterResource(id = screen.icon!!),
-//                        contentDescription = screen.route,
-//                        tint = if (selected) color else DarkGray,
-//                        modifier = Modifier.size(20.dp),
-//                    )
-//                }
-//            )
-//        }
-//    }
-//}

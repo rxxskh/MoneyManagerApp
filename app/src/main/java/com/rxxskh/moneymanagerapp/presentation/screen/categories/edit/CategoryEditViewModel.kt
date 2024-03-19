@@ -9,6 +9,7 @@ import com.rxxskh.domain.category.model.Category
 import com.rxxskh.domain.category.usecase.ApplyCategoryUseCase
 import com.rxxskh.domain.category.usecase.DeleteCategoryUseCase
 import com.rxxskh.domain.category.usecase.GetCategoryByIdUseCase
+import com.rxxskh.domain.transaction.model.OperationType
 import com.rxxskh.moneymanagerapp.common.Constants
 import com.rxxskh.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,8 @@ class CategoryEditViewModel @Inject constructor(
     private val deleteCategoryUseCase: DeleteCategoryUseCase
 ) : ViewModel() {
 
+    var passedCategoryType by mutableStateOf<OperationType?>(null)
+    private var statusPassingCategoryType by mutableStateOf<Boolean>(false)
     private var passedCategoryId by mutableStateOf<String?>(null)
     private var categoryIdSettingStatus by mutableStateOf<Boolean>(false)
     private var passedAccountId by mutableStateOf<String?>(null)
@@ -40,9 +43,21 @@ class CategoryEditViewModel @Inject constructor(
     var colorScreenStatus by mutableStateOf<Boolean>(false)
         private set
 
-    fun passData(accountId: String, categoryId: String) {
+    fun passData(categoryType: String, accountId: String, categoryId: String) {
+        setCategoryType(categoryType)
         setAccountId(accountId)
         setCategoryId(categoryId)
+    }
+
+    private fun setCategoryType(input: String) {
+        if (!statusPassingCategoryType) {
+            passedCategoryType = when (input) {
+                OperationType.INCOME.name -> OperationType.INCOME
+                OperationType.EXPENSE.name -> OperationType.EXPENSE
+                else -> OperationType.NONE
+            }
+            statusPassingCategoryType = true
+        }
     }
 
     private fun setCategoryId(input: String) {
@@ -95,7 +110,8 @@ class CategoryEditViewModel @Inject constructor(
                     categoryId = passedCategoryId,
                     categoryName = name,
                     categoryIcon = icon,
-                    categoryColor = colorIndex
+                    categoryColor = colorIndex,
+                    categoryType = passedCategoryType!!
                 ),
                 accountId = passedAccountId
             ).onEach { }.launchIn(viewModelScope)
@@ -109,7 +125,8 @@ class CategoryEditViewModel @Inject constructor(
                 categoryId = passedCategoryId,
                 categoryName = name,
                 categoryIcon = icon,
-                categoryColor = colorIndex
+                categoryColor = colorIndex,
+                categoryType = passedCategoryType!!
             )
         ).onEach { }.launchIn(viewModelScope)
             .invokeOnCompletion { onComplete() }

@@ -12,6 +12,7 @@ fun CategoryLocalData.toCategory() = Category(
     categoryName = category.categoryName,
     categoryIcon = category.categoryIcon,
     categoryColor = category.categoryColor,
+    categoryType = category.categoryType,
     categoryDeleted = category.categoryDeleted
 )
 

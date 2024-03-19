@@ -1,6 +1,6 @@
 package com.rxxskh.domain.transaction.model
 
-enum class TransactionType {
+enum class OperationType {
     INCOME,
     EXPENSE,
     NONE

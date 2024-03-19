@@ -1,38 +1,36 @@
 package com.rxxskh.moneymanagerapp.common
 
 import com.rxxskh.domain.account.model.Account
-import com.rxxskh.domain.category.model.Category
 import com.rxxskh.domain.user.model.User
-import com.rxxskh.moneymanagerapp.R
 
 object TestValues {
-    val categories = listOf(
-        Category(
-            categoryName = "Уборка",
-            categoryIcon = R.drawable.cat_cleaning,
-            categoryColor = 0
-        ),
-        Category(
-            categoryName = "Продукты",
-            categoryIcon = R.drawable.cat_hamburger,
-            categoryColor = 1
-        ),
-        Category(
-            categoryName = "Отдых",
-            categoryIcon = R.drawable.cat_bed,
-            categoryColor = 2
-        ),
-        Category(
-            categoryName = "Напитки",
-            categoryIcon = R.drawable.cat_water,
-            categoryColor = 3
-        ),
-        Category(
-            categoryName = "Кино",
-            categoryIcon = R.drawable.cat_computer,
-            categoryColor = 4
-        ),
-    )
+//    val categories = listOf(
+//        Category(
+//            categoryName = "Уборка",
+//            categoryIcon = R.drawable.cat_cleaning,
+//            categoryColor = 0
+//        ),
+//        Category(
+//            categoryName = "Продукты",
+//            categoryIcon = R.drawable.cat_hamburger,
+//            categoryColor = 1
+//        ),
+//        Category(
+//            categoryName = "Отдых",
+//            categoryIcon = R.drawable.cat_bed,
+//            categoryColor = 2
+//        ),
+//        Category(
+//            categoryName = "Напитки",
+//            categoryIcon = R.drawable.cat_water,
+//            categoryColor = 3
+//        ),
+//        Category(
+//            categoryName = "Кино",
+//            categoryIcon = R.drawable.cat_computer,
+//            categoryColor = 4
+//        ),
+//    )
 
     val accounts = listOf(
         Account(

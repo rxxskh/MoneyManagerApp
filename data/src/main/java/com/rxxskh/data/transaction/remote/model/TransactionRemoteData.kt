@@ -3,7 +3,7 @@ package com.rxxskh.data.transaction.remote.model
 import com.rxxskh.domain.account.model.Account
 import com.rxxskh.domain.category.model.Category
 import com.rxxskh.domain.transaction.model.Transaction
-import com.rxxskh.domain.transaction.model.TransactionType
+import com.rxxskh.domain.transaction.model.OperationType
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
@@ -13,9 +13,9 @@ data class TransactionRemoteData(
     val user_id: String? = null,
     val account_id: String? = null,
     val category_id: String? = null,
-    val value: Long? = null,
-    val type: String? = null,
-    val date: String? = null
+    val transaction_value: Long? = null,
+    val transaction_type: String? = null,
+    val transaction_date: String? = null
 )
 
 fun Transaction.toTransactionRemoteData() = TransactionRemoteData(
@@ -23,9 +23,9 @@ fun Transaction.toTransactionRemoteData() = TransactionRemoteData(
     user_id = userId,
     account_id = account.accountId,
     category_id = category.categoryId,
-    value = value,
-    type = type.name,
-    date = date.toUtc()
+    transaction_value = transactionValue,
+    transaction_type = operationType.name,
+    transaction_date = transactionDate.toUtc()
 )
 
 fun TransactionRemoteData.toTransaction(account: Account, category: Category) = Transaction(
@@ -33,9 +33,9 @@ fun TransactionRemoteData.toTransaction(account: Account, category: Category) = 
     userId = user_id ?: "",
     account = account,
     category = category,
-    value = value ?: 0,
-    type = TransactionType.valueOf(type ?: TransactionType.NONE.name),
-    date = date?.toDate() ?: Date()
+    transactionValue = transaction_value ?: 0,
+    operationType = OperationType.valueOf(transaction_type ?: OperationType.NONE.name),
+    transactionDate = transaction_date?.toDate() ?: Date()
 )
 
 fun String.toDate(): Date {

@@ -28,6 +28,8 @@ class MainActivity : ComponentActivity() {
                             navController.currentBackStackEntryAsState().value?.destination?.route
                         val noMenuRoutes = listOf(
                             Screen.SplashScreen.route,
+                            Screen.SignupScreen.route,
+                            Screen.LoginScreen.route,
                             null
                         )
                         if (!noMenuRoutes.contains(nowScreenRoute)) {

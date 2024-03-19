@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.rxxskh.domain.transaction.model.TransactionType
+import com.rxxskh.domain.transaction.model.OperationType
 import com.rxxskh.moneymanagerapp.R
 import com.rxxskh.moneymanagerapp.presentation.component.AppLargeButton
 import com.rxxskh.moneymanagerapp.presentation.component.AppTopBar
@@ -64,12 +64,9 @@ fun ExpenseScreen(
                 text = stringResource(id = R.string.expense_title)
             )
             SelectingPanel(
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    top = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                ),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .padding(horizontal = 16.dp),
                 selectedCategory = vm.selectedCategory,
                 categories = vm.categories,
                 selectedAccount = vm.selectedAccount,
@@ -78,14 +75,17 @@ fun ExpenseScreen(
                 onCategoryClick = { vm.selectCategory(it) },
                 onEditCategoryClick = {
                     navController.navigate(
-                        Screen.CategoriesScreen.passAccountId(
+                        Screen.CategoriesScreen.passIds(
+                            categoryType = OperationType.EXPENSE.name,
                             accountId = it
                         )
                     )
                 }
             )
             NumKeyboard(
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .padding(horizontal = 16.dp),
                 value = vm.value,
                 valueColor = LightRed,
                 numKeys = numKeys,
@@ -116,7 +116,7 @@ fun ExpenseScreen(
                         onClick = {
                             navController.navigate(
                                 Screen.HistoryScreen.passHistoryType(
-                                    historyType = TransactionType.EXPENSE.name
+                                    historyType = OperationType.EXPENSE.name
                                 )
                             )
                         }

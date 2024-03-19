@@ -16,10 +16,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,100 +39,100 @@ import com.rxxskh.moneymanagerapp.presentation.ui.theme.base2
 import com.rxxskh.moneymanagerapp.presentation.ui.theme.link
 import com.rxxskh.moneymanagerapp.presentation.ui.theme.title2
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     vm: LoginViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Background),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier.imePadding(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+    if (vm.logged == true) {
+        navController.navigate(Screen.SplashScreen.route)
+        vm.logged = null
+    } else if (vm.logged == false) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Background),
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = stringResource(id = R.string.login_title).uppercase(),
-                modifier = Modifier.padding(start = 16.dp),
-                color = Color.White,
-                style = MaterialTheme.typography.title2
-            )
-            AppTextField(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                value = vm.login,
-                onValueChange = { vm.updateLogin(it) },
-                placeHolder = stringResource(id = R.string.login_placeholder),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                )
-            )
-            AppTextField(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                value = vm.password,
-                onValueChange = { vm.updatePassword(it) },
-                placeHolder = stringResource(id = R.string.password_placeholder),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done
-                )
-            )
-            if (vm.haveError()) {
-                Text(
-                    text = stringResource(id = R.string.test_error),
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                    color = DarkRed,
-                    textAlign = TextAlign.Center,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.base2
-                )
-            }
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.imePadding(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                AppLargeButton(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    enabled = vm.isButtonEnabled(),
-                    onClick = { vm.loginUser() },
-                    gradient = BlueGradient,
-                    text = stringResource(id = if (vm.isLoginWaiting()) R.string.login_waiting else R.string.login_button)
+                Text(
+                    text = stringResource(id = R.string.login_title).uppercase(),
+                    modifier = Modifier.padding(start = 16.dp),
+                    color = Color.White,
+                    style = MaterialTheme.typography.title2
                 )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
+                AppTextField(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    value = vm.login,
+                    onValueChange = { vm.updateLogin(it) },
+                    onClearClick = { vm.clearLogin() },
+                    placeHolder = stringResource(id = R.string.login_placeholder),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
+                )
+                AppTextField(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    value = vm.password,
+                    onValueChange = { vm.updatePassword(it) },
+                    onClearClick = { vm.clearPassword() },
+                    placeHolder = stringResource(id = R.string.password_placeholder),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    )
+                )
+                if (vm.haveError()) {
                     Text(
-                        text = stringResource(id = R.string.login_no_account),
-                        color = LightGray,
+                        text = stringResource(id = R.string.test_error),
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth(),
+                        color = DarkRed,
+                        textAlign = TextAlign.Center,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.base2
                     )
-                    Text(
-                        text = stringResource(id = R.string.signup_title),
-                        modifier = Modifier.clickable(
-                            interactionSource = MutableInteractionSource(),
-                            indication = null,
-                            onClick = {
-                                navController.navigate(Screen.SignupScreen.route)
-                            }
-                        ),
-                        color = LightBlue,
-                        style = MaterialTheme.typography.link
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    AppLargeButton(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        enabled = vm.isButtonEnabled(),
+                        onClick = { vm.loginUser(onComplete = { navController.navigate(Screen.SplashScreen.route) }) },
+                        gradient = BlueGradient,
+                        text = stringResource(id = if (vm.isLoginWaiting()) R.string.login_waiting else R.string.login_button)
                     )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.login_no_account),
+                            color = LightGray,
+                            style = MaterialTheme.typography.base2
+                        )
+                        Text(
+                            text = stringResource(id = R.string.signup_title),
+                            modifier = Modifier.clickable(
+                                interactionSource = MutableInteractionSource(),
+                                indication = null,
+                                onClick = {
+                                    navController.navigate(Screen.SignupScreen.route)
+                                }
+                            ),
+                            color = LightBlue,
+                            style = MaterialTheme.typography.link
+                        )
+                    }
                 }
             }
         }
-    }
-
-    if (vm.status == true) {
-        navController.navigate(Screen.SignupScreen.route)
-        val keyboardController = LocalSoftwareKeyboardController.current
-        keyboardController?.hide()
     }
 }

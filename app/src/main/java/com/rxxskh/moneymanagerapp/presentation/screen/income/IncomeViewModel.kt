@@ -10,7 +10,7 @@ import com.rxxskh.domain.account.usecase.GetAccountsUseCase
 import com.rxxskh.domain.category.model.Category
 import com.rxxskh.domain.category.usecase.GetCategoriesUseCase
 import com.rxxskh.domain.transaction.model.Transaction
-import com.rxxskh.domain.transaction.model.TransactionType
+import com.rxxskh.domain.transaction.model.OperationType
 import com.rxxskh.domain.transaction.usecase.AddTransactionUseCase
 import com.rxxskh.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -93,9 +93,9 @@ class IncomeViewModel @Inject constructor(
             transaction = Transaction(
                 account = selectedAccount!!,
                 category = selectedCategory!!,
-                value = value!!.toLong(),
-                type = TransactionType.INCOME,
-                date = Date()
+                transactionValue = value!!.toLong(),
+                operationType = OperationType.INCOME,
+                transactionDate = Date()
             )
         ).onEach {
             addLoading = false
@@ -134,7 +134,7 @@ class IncomeViewModel @Inject constructor(
             when (result) {
                 is Resource.Error -> {}
                 is Resource.Success -> {
-                    categories = result.data!!
+                    categories = result.data!!.filter { it.categoryType == OperationType.INCOME }
                     if (categories.isNotEmpty()) {
                         selectedCategory = categories[0]
                     } else {
