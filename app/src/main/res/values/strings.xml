@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">MoneyManager</string>
+
+    <string name="login_title">Вход</string>
+    <string name="signup_title">Регистрация</string>
+    <string name="login_button">Войти</string>
+    <string name="signup_button">Зарегистрироваться</string>
+    <string name="signup_waiting">Регистрация...</string>
+    <string name="login_waiting">Вход...</string>
+    <string name="login_no_account">Нет аккаунта?</string>
+    <string name="signup_have_account">Есть аккаунт?</string>
+    <string name="login_placeholder">Логин</string>
+    <string name="password_placeholder">Пароль</string>
+    <string name="test_error">Неизвестная ошибка</string>
+
+    <string name="enter_number">Введите сумму...</string>
+    <string name="edit_category">Редактировать</string>
+    <string name="category_not_found">Отсутсвуют категории для данного счета</string>
+
+
+    <string name="income_title">Доходы</string>
+    <string name="expense_title">Расходы</string>
+
+    <string name="history">История</string>
+
+    <string name="accounts_title">Счета</string>
+
+    <string name="name_placeholder">Название</string>
+    <string name="account_balance_placeholder">Баланс</string>
+
+
+    <string name="add_button">Добавить</string>
+    <string name="add_button_loading">Добавление...</string>
+    <string name="edit_button">Изменить</string>
+    <string name="edit_button_loading">Изменение...</string>
+    <string name="account_members_title">Совладельцы счета</string>
+    <string name="account_edit_title">Редактировать счет</string>
+    <string name="account_edit_title_new">Новый счет</string>
+
+    <string name="friends_title">Друзья</string>
+    <string name="friends_add_title">Добавить друга</string>
+    <string name="friends_placeholder">Введите логин друга...</string>
+
+    <string name="categories_title">Категории</string>
+
+    <string name="category_edit_title_new">Новая категория</string>
+    <string name="category_edit_icon">Иконка</string>
+    <string name="category_edit_color">Цвет</string>
+
+    <string name="icon_edit_title">Иконки</string>
+    <string name="color_edit_title">Цвета</string>
+
+    <string name="delete_category">Удалить категорию</string>
+    <string name="month">Месяц</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="remove_all">Снять метки</string>
+</resources>

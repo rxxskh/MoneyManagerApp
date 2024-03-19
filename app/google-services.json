@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "557823867597",
+    "project_id": "moneymanagerkfu",
+    "storage_bucket": "moneymanagerkfu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:557823867597:android:34df5bee3be93eddcac784",
+        "android_client_info": {
+          "package_name": "com.rxxskh.moneymanagerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyQYPXy_gnoYct_IMczdbKuaD460dWJCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
